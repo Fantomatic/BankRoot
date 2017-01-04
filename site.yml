@@ -1,10 +1,12 @@
-- name: "Provision Docker Swarm Cluster"
+- name: Provision Docker Swarm Cluster
   hosts: all
   roles:
     - { role: atosatto.docker-swarm }
-    - telegraf
   tasks:
     - name: "install docker-compose-swarm-mode"
       pip: name=docker-compose-swarm-mode version=1.1.1 state=present
 
-
+- name: Create monitoring with influxdata stack
+  hosts: all 
+  roles: 
+    - monitoring

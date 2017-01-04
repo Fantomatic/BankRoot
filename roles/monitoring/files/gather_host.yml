@@ -1,0 +1,5 @@
+telegraf:
+  image: telegraf:1.1
+  container_name: telegraf
+  links:
+    - influxdb

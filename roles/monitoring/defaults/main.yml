@@ -1,0 +1,2 @@
+influxdb_url: "{% for host in groups[monitoring] %}http://{{ hostvars[host].ansible_default_ipv4.address }}:8086{% if not loop.last %},{% else %} http://localhost:8086 {% endif %}{% endfor %}"
+

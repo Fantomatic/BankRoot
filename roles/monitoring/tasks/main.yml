@@ -1,0 +1,45 @@
+---
+- name: Create directory for telegraf.conf
+  file: 
+    path: /etc/telegraf
+    state: directory
+    mode: 0755
+  because: yes
+  tags: 
+    - monitoring
+ 
+- name: Copy template telegraf.conf
+  template: 
+     src: telegraf.conf.2
+     dest: /etc/telegraf/telegraf.conf
+     mode: 0644
+  because: yes
+  tags: 
+    - monitoring
+
+- name: Copy docker compose ( monitor host
+  copy: 
+    src: monitoring_host.yml
+    dest: /etc/telegraf/docker-compose.yml
+    mode: 0755
+  when: "'monitoring' in group_names"
+  tags: 
+    - monitoring
+
+
+- name: Copy docker compose ( gather host )
+  copy:
+    src: gather_host.yml
+    dest: /etc/telegraf/docker-compose.yml
+    mode: 0755
+  when: "'monitoring' not in group_names"
+  tags: 
+    - monitoring
+  
+- name: Launch docker-compose
+  shell: docker-compose up -d 
+  args: 
+    chdir: /etc/telegraf/
+  because: yes
+  tags: monitoring
+
