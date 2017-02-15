@@ -11,7 +11,7 @@ consul_client_address: "0.0.0.0"
 
 # -- Enable retry_join -- #
 consul_retry_join: true
-consul_retry_interval: 30s
+consul_retry_interval: 30
 consul_retry_max: 0
 
 # -- Enable ui -- #
