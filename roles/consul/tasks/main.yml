@@ -1,131 +1,32 @@
----
 # -- Config Consul server -- #
+---
+# -- Port configuration -- #
+consul_port_rpc: 8400
+consul_port_http: 8500
+consul_port_dns: 8600
 
+# -- Bind address for client and server -- #
+consul_bind_address: "127.0.0.1"
+consul_client_address: "0.0.0.0"
+
+# -- Enable retry_join -- #
+consul_retry_join: true
+consul_retry_interval: 30s
+consul_retry_max: 0
+
+# -- Enable ui -- #
+consul_is_ui: true
+
+# -- Consul setting -- #
 consul_acl_datacenter: "Cluster-Infra-Prod"
 consul_acl_default_policy: "deny"
 consul_acl_down_policy: "extend-cache"
 consul_acl_master_token: "Passw0rd"
 consul_bootstrap: true
 consul_datacenter: "Cluster-Infra-Prod"
-# -- enable ui -- #
-consul_is_ui: true
-consul_is_server: true
-consul_servers: ['127.0.0.1']
-consul_log_level: "INFO"
-
-
-consul_syslog: false
-consul_rejoin_after_leave: true
-consul_leave_on_terminate: false
-consul_bind_address: "127.0.0.1"
-consul_client_address_bind: false
-consul_client_address: "0.0.0.0"
-
-consul_port_dns: 8600
-consul_port_http: 8500
-consul_port_https: -1
-consul_port_rpc: 8400
-consul_port_serf_lan: 8301
-consul_port_serf_wan: 8302
-consul_port_server: 8300
-consul_install_dnsmasq: false
-consul_install_consulate: false
-consul_dnsmasq:
-  listen_interface:
-    - lo
-    - docker0
-    - eth0
-  no_dhcp_interface:
-    - lo
-    - docker0
-    - eth0
-  upstream_servers:
-    - 8.8.8.8
-    - 8.8.4.4
-consul_node_name: "{{ inventory_hostname }}"
-consul_verify_server_hostname: false
-consul_cors_support: false
-consul_disable_update_check: false
-
-
-
-
-
-# -- Download consul  -- #
-consul_version: 0.6.0
-consul_archive: "consul_{{ consul_version }}_linux_amd64.zip"
-consul_download: "https://releases.hashicorp.com/consul/{{ consul_version }}/{{ consul_archive }}"
-consul_download_username: ""
-consul_download_password: ""
-consul_download_folder: /tmp
-
-
-
-# -- Download ui  -- #
-consul_ui_archive: "consul_{{ consul_version }}_web_ui.zip"
-consul_ui_download: "https://releases.hashicorp.com/consul/{{ consul_version }}/{{ consul_ui_archive }}"
-consul_ui_dir: "{{ consul_home }}/dist"
-consul_ui_server_name: "{{ ansible_fqdn }}"
-consul_ui_require_auth: false
-consul_ui_nginx_template: "consul-nginx.conf.j2"
-consul_ui_auth_user_file: /etc/htpasswd/consul
-consul_ui_server_port: 80
-consul_install_nginx: true
-consul_install_nginx_config: true
-consul_enable_nginx_config: true
-consul_service_state: restarted
-
-# -- Enable Consul Cli  -- #
-consul_install_consul_cli: false
-consul_cli_archive: "master.zip"
-consul_cli_download: "https://github.com/CiscoCloud/consul-cli/archive/{{ consul_cli_archive }}"
-
-# -- Consul Folders -- #
-consul_home: /opt/consul
-consul_config_dir: /etc/consul.d
-consul_config_file: /etc/consul.conf
-consul_log_file: /var/log/consul
 #consul_data_dir: "{{ consul_home }}/data"
 consul_data_dir: "/usr/local/bin/consul.d/data"
+consul_is_server: true
 
+#docker service create --name=consul -p 8400:8400 -p 8500:8500/tcp -p 8600:53/udp -e 'CONSUL_LOCAL_CONFIG={"acl_datacenter":"Cluster-Infra-Prod","acl_default_policy":"deny","acl_down_policy":"extend-cache","acl_master_token":"Passw0rd","bootstrap_expect":1,"datacenter":"Cluster-Infra-Prod","data_dir":"/usr/local/bin/consul.d/data","server":true}' -retry-join"10.31.14.247" consul agent -server -bind=127.0.0.1 -client=0.0.0.0 -ui
 
-#consul_dns_allow_stale: false
-#consul_dns_max_stale: 5s
-#consul_dns_node_ttl: 0s
-#consul_dns_service_ttl: 0s
-#consul_dns_enable_truncate: false
-#consul_dns_only_passing: false
-#consul_recursors: []
-
-consul_upstart_template: "consul.conf.j2"
-consul_systemd_template: "consul.systemd.j2"
-consul_initd_template: "consul.initd.sh.j2"
-consul_dnsmasq_upstream_template: "resolv_dnsmasq.conf.j2"
-consul_kv_template: "consulkv.j2"
-consul_add_path_template: "consul.sh.j2"
-consul_config_template: "consul.json.j2"
-
-consul_binary: consul
-
-#consul_user: consul
-#consul_group: consul
-
-consul_use_systemd: false
-consul_use_upstart: true
-consul_use_initd: false
-
-consul_join_at_start: false
-consul_retry_join: true
-consul_retry_interval: 30s
-consul_retry_max: 0
-
-consul_servers_wan: []
-consul_join_wan: false
-consul_retry_join_wan: false
-consul_retry_interval_wan: 30s
-consul_retry_max_wan: 0
-consul_advertise_address_wan: false
-consul_advertise_address: "127.0.0.1" - default: `undefined`. If this variable is not defined it is not set in the config
-
-consul_dynamic_bind: false
-consul_disable_remote_exec: true
