@@ -1,7 +1,7 @@
 # -- Config Consul server -- #
 ---
 # -- Port configuration -- #
-consul_port_rpc: 8400
+consul_port_server: 8400
 consul_port_http: 8500
 consul_port_dns: 8600
 
