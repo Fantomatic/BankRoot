@@ -1,31 +1,25 @@
 # -- Config Consul server -- #
 ---
-# -- Port configuration -- #
-consul_port_server: 8400
-consul_port_http: 8500
-consul_port_dns: 8600
+- hosts: 192.168.14.245
+ remote_user: bot
+ sudo: yes
+ tasks:
+   - name: Create consul container
+ docker_container:
+   name: consul
+   ports:
+          - "8400:8400"
+          - "8500:8500/tcp"
+          - "8600:53/udp"
+   env:
+        CONSUL_LOCAL_CONFIG={"acl_datacenter":"Cluster-Infra-Prod","acl_default_policy":"deny","acl_down_policy":"extend-cache","acl_master_token":"Passw0rd","bootstrap_expect":1,"datacenter":"Cluster-Infra-Prod","data_dir":"/usr/local/bin/consul.d/data","server":true}
+   
+   command:
+      -retry-join"127.0.0.1" consul agent
+      -server 
+      -bind=127.0.0.1 
+      -client=0.0.0.0 
+      -ui
 
-# -- Bind address for client and server -- #
-consul_bind_address: "127.0.0.1"
-consul_client_address: "0.0.0.0"
-
-# -- Enable retry_join -- #
-consul_retry_join: true
-consul_retry_interval: 30
-consul_retry_max: 0
-
-# -- Enable ui -- #
-consul_is_ui: true
-
-# -- Consul setting -- #
-consul_acl_datacenter: "Cluster-Infra-Prod"
-consul_acl_default_policy: "deny"
-consul_acl_down_policy: "extend-cache"
-consul_acl_master_token: "Passw0rd"
-consul_bootstrap: true
-consul_datacenter: "Cluster-Infra-Prod"
-#consul_data_dir: "{{ consul_home }}/data"
-consul_data_dir: "/usr/local/bin/consul.d/data"
-consul_is_server: true
 
 #docker run -d --name=consul -p 8400:8400 -p 8500:8500/tcp -p 8600:53/udp -e 'CONSUL_LOCAL_CONFIG={"acl_datacenter":"Cluster-Infra-Prod","acl_default_policy":"deny","acl_down_policy":"extend-cache","acl_master_token":"Passw0rd","bootstrap_expect":1,"datacenter":"Cluster-Infra-Prod","data_dir":"/usr/local/bin/consul.d/data","server":true}' -retry-join"127.0.0.1" consul agent -server -bind=127.0.0.1 -client=0.0.0.0 -ui
